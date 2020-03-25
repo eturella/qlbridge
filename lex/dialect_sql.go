@@ -890,6 +890,16 @@ func LexDdlTableColumn(l *Lexer) StateFn {
 			return LexListOfArgs
 		}
 		return LexDdlTableColumn
+	case "float", "double", "decimal":
+		l.ConsumeWord(word)
+		l.Emit(TokenTypeFloat)
+		p := l.Peek()
+		if p == '(' {
+			l.Push("LexDdlTableColumn", LexDdlTableColumn)
+			l.Push("LexParenRight", LexParenRight)
+			return LexListOfArgs
+		}
+		return LexDdlTableColumn
 	case "text":
 		l.ConsumeWord(word)
 		l.Emit(TokenTypeText)

@@ -237,6 +237,55 @@ func TestLexSqlCreate(t *testing.T) {
 			tv(TokenValue, "hello"),
 		})
 }
+
+func TestLexSqlCreateTypeFloat(t *testing.T) {
+	verifyTokens(t, `CREATE TABLE articles 
+		 (
+		  ID int(11) NOT NULL AUTO_INCREMENT,
+		  value1 float,
+		  value2 float(15) ,
+		  value3 double,
+		  PRIMARY KEY (ID)
+		);`,
+		[]Token{
+			tv(TokenCreate, "CREATE"),
+			tv(TokenTable, "TABLE"),
+			tv(TokenIdentity, "articles"),
+			tv(TokenLeftParenthesis, "("),
+			tv(TokenIdentity, "ID"),
+			tv(TokenTypeInteger, "int"),
+			tv(TokenLeftParenthesis, "("),
+			tv(TokenInteger, "11"),
+			tv(TokenRightParenthesis, ")"),
+			tv(TokenNegate, "NOT"),
+			tv(TokenNull, "NULL"),
+			tv(TokenIdentity, "AUTO_INCREMENT"),
+
+			tv(TokenComma, ","),
+			tv(TokenIdentity, "value1"),
+			tv(TokenTypeFloat, "float"),
+
+			tv(TokenComma, ","),
+			tv(TokenIdentity, "value2"),
+			tv(TokenTypeFloat, "float"),
+			tv(TokenLeftParenthesis, "("),
+			tv(TokenInteger, "15"),
+			tv(TokenRightParenthesis, ")"),
+
+			tv(TokenComma, ","),
+			tv(TokenIdentity, "value3"),
+			tv(TokenTypeFloat, "double"),
+
+			tv(TokenComma, ","),
+			tv(TokenPrimary, "PRIMARY"),
+			tv(TokenKey, "KEY"),
+			tv(TokenLeftParenthesis, "("),
+			tv(TokenIdentity, "ID"),
+			tv(TokenRightParenthesis, ")"),
+			tv(TokenRightParenthesis, ")"),
+		})
+}
+
 func TestLexSqlDrop(t *testing.T) {
 	// DROP {DATABASE | SCHEMA | SOURCE | TABLE} [IF EXISTS] db_name
 	verifyTokens(t, `DROP SCHEMA IF EXISTS myschema;`,
